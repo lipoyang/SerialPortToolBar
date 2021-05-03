@@ -48,7 +48,7 @@ namespace SerialPortToolBar
         /// <summary>
         /// シリアルポート
         /// </summary>
-        public SerialPort Port { private set; get; }
+        public SerialPort Port { get => serialPort; }
 
         #endregion
 
@@ -81,12 +81,13 @@ namespace SerialPortToolBar
         /// 初期化処理。フォームの開始時(Loadイベント)に呼んでください。
         /// </summary>
         /// <param name="iniFileName">設定INIファイルのパス</param>        
-        public void Begin(string iniFileName = @".\SETTING.INI")
+        public void Begin(string iniFileName = @".\SETTING.INI", string section = "COM_PORT")
         {
             // COMポートとボーレートの既定値を設定ファイルから読み出し
             iniFile = new IniFile(iniFileName);
-            defaultPortName = iniFile.ReadString("COM_PORT", "PORT_NAME", "COM3");
-            defaultBaudRate = iniFile.ReadInteger("COM_PORT", "BAUD_RATE", 9600);
+            iniSection = section;
+            defaultPortName = iniFile.ReadString(iniSection, "PORT_NAME", "COM3");
+            defaultBaudRate = iniFile.ReadInteger(iniSection, "BAUD_RATE", 9600);
 
             // COMポートリストの更新
             updateComPortList();
@@ -107,12 +108,19 @@ namespace SerialPortToolBar
         /// </summary>
         public void End()
         {
+            // シリアルポートが開いていたら閉じる
+            try{
+                if (serialPort.IsOpen) serialPort.Close();
+            } catch {
+                ;
+            }
+
             // COMポートリスト更新用タイマを停止
             timerListUpdate.Stop();
 
             // COMポートとボーレートの既定値を設定ファイルに保存
-            iniFile.WriteString("COM_PORT", "PORT_NAME", defaultPortName);
-            iniFile.WriteInteger("COM_PORT", "BAUD_RATE", defaultBaudRate);
+            iniFile.WriteString(iniSection, "PORT_NAME", defaultPortName);
+            iniFile.WriteInteger(iniSection, "BAUD_RATE", defaultBaudRate);
         }
 
         #endregion
@@ -121,6 +129,8 @@ namespace SerialPortToolBar
 
         // 設定ファイル
         IniFile iniFile;
+        // 設定ファイルのセクション名
+        string iniSection;
 
         // デフォルトのCOMポート名とボーレート
         string defaultPortName = "COM3";
@@ -314,6 +324,17 @@ namespace SerialPortToolBar
             base.OnFontChanged(e);
         }
 
+        // マウスが入った時の処理
+        // (フォーカスが無いときのボタンクリックが効かない問題の対策)
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+
+            if (!this.Focused)
+            {
+                this.Focus();
+            }
+        }
         #endregion
 
         #region 初期化処理(デザイナーの生成コードから流用)
