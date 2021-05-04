@@ -12,6 +12,7 @@ using SerialPortToolBar;
 
 namespace TestApp
 {
+    // テスト1
     public partial class Form1 : Form
     {
         public Form1()
@@ -55,6 +56,7 @@ namespace TestApp
             var serialPort = serialPortToolStrip.Port;
             if (serialPort.IsOpen)
             {
+                // 入力された文字を送信
                 serialPort.WriteChar(e.KeyChar); // 拡張メソッド
             }
         }
