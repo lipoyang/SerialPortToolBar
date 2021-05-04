@@ -102,7 +102,7 @@ namespace TestApp
 
                     // プログレスバーに表示
                     this.BeginInvoke((Action)(()=> {
-                        progressBar.Value = val;
+                        progressBar.SetValue(val);
                     }));
                 } catch {
                     ;

@@ -108,13 +108,21 @@ namespace SerialPortToolBar
         {
             DateTime startTime = DateTime.Now;
             rxState = RxState.Ready;
-
+            
+            // 受信パケットのキューをいったん破棄
+            rxPackets.Clear(); 
+            
             // パケット受信かタイムアウトまで
             while (true)
             {
                 // パケット受信処理
-                byte[] packet = receivePacket();
-                if(packet != null) return packet;
+                receivePacket();
+                // 受信パケットがあれば返す
+                if(rxPackets.Count > 0)
+                {
+                    byte[] packet = rxPackets.Dequeue();
+                    return packet;
+                }
 
                 // タイムアウト判定
                 DateTime endTime = DateTime.Now;
@@ -216,12 +224,15 @@ namespace SerialPortToolBar
                 if (serialPort.IsOpen)
                 {
                     // パケット受信処理
-                    byte[] packet = receivePacket();
-                    // 受信があればキューに入れてイベント発行
-                    if (packet != null)
+                    receivePacket();
+                    // パケット受信があればイベント発行
+                    if (rxPackets.Count > 0)
                     {
-                        rxPackets.Enqueue(packet);
-                        PacketReceived?.Invoke(this, EventArgs.Empty);
+                        if(PacketReceived != null) {
+                            PacketReceived.Invoke(this, EventArgs.Empty);
+                        } else {
+                            rxPackets.Clear(); // イベントハンドラが無いならキューを破棄
+                        }
                     }
                 }
                 Thread.Sleep(PollingInterval);
@@ -229,8 +240,7 @@ namespace SerialPortToolBar
         }
 
         // シリアルパケット受信処理
-        // returns: 受信したパケット (未受信ならnullを返す)
-        private byte[] receivePacket()
+        private void receivePacket()
         {
             // タイムアウト判定
             DateTime endTime = DateTime.Now;
@@ -243,24 +253,23 @@ namespace SerialPortToolBar
             int size = serialPort.BytesToRead;
             byte[] data = new byte[size];
             int readSize = serialPort.Read(data, 0, size);
-            if (readSize == 0) return null;
+            if (readSize == 0) return;
 
             // アスキーモードの場合
             if(PacketMode == PacketMode.Ascii)
             {
-                return receivePacketAscii(data);
+                receivePacketAscii(data);
             }
             // バイナリーモードの場合
             else
             {
-                return receivePacketBinary(data);
+                receivePacketBinary(data);
             }
         }
 
         // シリアルパケット受信処理(アスキーモード)
         // data:受信したデータ
-        // returns:受信したパケット (未受信ならnullを返す)
-        private byte[] receivePacketAscii(byte[] data)
+        private void receivePacketAscii(byte[] data)
         {
             foreach (byte c in data)
             {
@@ -292,10 +301,10 @@ namespace SerialPortToolBar
                             rxIndex++;
                             rxState = RxState.Ready;
 
-                            // 受信パケットを返す
+                            // 受信パケットをキューに入れる
                             byte[] packet = new byte[rxIndex];
                             Array.Copy(rxBuff, packet, rxIndex);
-                            return packet;
+                            rxPackets.Enqueue(packet);
                         }
                         // 1文字格納
                         else
@@ -313,13 +322,11 @@ namespace SerialPortToolBar
                         break;
                 }
             }
-            return null;
         }
 
         // シリアルパケット受信処理(バイナリーモード)
         // data:受信したデータ
-        // returns:受信したパケット (未受信ならnullを返す)
-        private byte[] receivePacketBinary(byte[] data)
+        private void receivePacketBinary(byte[] data)
         {
             foreach (byte d in data)
             {
@@ -388,10 +395,10 @@ namespace SerialPortToolBar
                         {
                             rxState = RxState.Ready;
 
-                            // 受信パケットを返す
+                            // 受信パケットをキューに入れる
                             byte[] packet = new byte[rxLength];
                             Array.Copy(rxBuff, packet, rxLength);
-                            return packet;
+                            rxPackets.Enqueue(packet);
                         }
                         else if (rxIndex >= packetMaxSize)
                         {
@@ -403,7 +410,6 @@ namespace SerialPortToolBar
                         break;
                 }
             }
-            return null;
         }
 
         // パケット長計算
