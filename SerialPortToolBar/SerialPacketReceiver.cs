@@ -213,13 +213,16 @@ namespace SerialPortToolBar
         {
             while (!threadRxQuit)
             {
-                // パケット受信処理
-                byte[] packet = receivePacket();
-                // 受信があればキューに入れてイベント発行
-                if(packet != null)
+                if (serialPort.IsOpen)
                 {
-                    rxPackets.Enqueue(packet);
-                    PacketReceived?.Invoke(this, EventArgs.Empty);
+                    // パケット受信処理
+                    byte[] packet = receivePacket();
+                    // 受信があればキューに入れてイベント発行
+                    if (packet != null)
+                    {
+                        rxPackets.Enqueue(packet);
+                        PacketReceived?.Invoke(this, EventArgs.Empty);
+                    }
                 }
                 Thread.Sleep(PollingInterval);
             }

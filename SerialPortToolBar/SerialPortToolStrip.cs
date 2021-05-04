@@ -23,18 +23,21 @@ namespace SerialPortToolBar
         /// シリアルポートを開いた時のイベント
         /// </summary>
         [Browsable(true)]
+        [Category("拡張機能")]
         public event EventHandler Opened = delegate { };
 
         /// <summary>
         /// シリアルポートを閉じた時のイベント
         /// </summary>
         [Browsable(true)]
+        [Category("拡張機能")]
         public event EventHandler Closed = delegate { };
 
         /// <summary>
         /// シリアルポートのデータ受信時のイベント
         /// </summary>
         [Browsable(true)]
+        [Category("拡張機能")]
         public event SerialDataReceivedEventHandler DataReceived
         {
             add => serialPort.DataReceived += value;

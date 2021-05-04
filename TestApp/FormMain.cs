@@ -39,7 +39,12 @@ namespace TestApp
 
         private void button3_Click(object sender, EventArgs e)
         {
-
+            var formA = new Form3();
+            formA.Text = "テスト3 ポートA側";
+            formA.Show();
+            var formB = new Form3();
+            formB.Text = "テスト3 ポートB側";
+            formB.Show();
         }
 
         private void button4_Click(object sender, EventArgs e)
