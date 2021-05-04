@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SerialPacketReceiver.cs" />
+    <Compile Include="SerialPortExtensions.cs" />
     <Compile Include="SerialPortToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>

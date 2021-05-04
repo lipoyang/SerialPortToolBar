@@ -80,7 +80,8 @@ namespace SerialPortToolBar
         /// <summary>
         /// 初期化処理。フォームの開始時(Loadイベント)に呼んでください。
         /// </summary>
-        /// <param name="iniFileName">設定INIファイルのパス</param>        
+        /// <param name="iniFileName">設定INIファイルのパス</param>
+        /// <param name="section">設定INIファイルのセクション名</param>
         public void Begin(string iniFileName = @".\SETTING.INI", string section = "COM_PORT")
         {
             // COMポートとボーレートの既定値を設定ファイルから読み出し

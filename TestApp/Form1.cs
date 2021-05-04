@@ -36,13 +36,12 @@ namespace TestApp
         // シリアル通信データ受信イベント
         private void serialPortToolStrip_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
-            // 受信したデータを取得
-            //var serialPort = (SerialPort)sender; // こう書いても同じ
+            // シリアルポート
             var serialPort = serialPortToolStrip.Port;
-            int size = serialPort.BytesToRead;
-            byte[] data = new byte[size];
-            serialPort.Read(data, 0, size);
-            string str = Encoding.ASCII.GetString(data);
+            //var serialPort = (SerialPort)sender; // こう書いても良い
+
+            // 受信したデータを文字列として取得
+            string str = serialPort.ReadExisting();
 
             // テキストボックスに表示
             this.BeginInvoke((Action)(()=> {
@@ -56,8 +55,7 @@ namespace TestApp
             var serialPort = serialPortToolStrip.Port;
             if (serialPort.IsOpen)
             {
-                char[] data = new char[] { e.KeyChar };
-                serialPort.Write(data, 0, 1);
+                serialPort.WriteChar(e.KeyChar); // 拡張メソッド
             }
         }
 
