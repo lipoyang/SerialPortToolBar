@@ -21,14 +21,14 @@ namespace TestApp
         }
 
         // 開始処理
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             // フォームのLoadイベントで開始処理を呼ぶ
             serialPortToolStrip.Begin(@"SETTING.INI", this.Text);
         }
 
         // 終了処理
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             // フォームのFormClosingイベントで終了処理を呼ぶ
             serialPortToolStrip.End();

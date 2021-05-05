@@ -85,7 +85,7 @@ namespace TestApp
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(12, 195);
+            this.button5.Location = new System.Drawing.Point(12, 183);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 4;
@@ -105,7 +105,7 @@ namespace TestApp
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(93, 17);
+            this.label1.Location = new System.Drawing.Point(93, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(235, 30);
             this.label1.TabIndex = 6;
@@ -113,7 +113,7 @@ namespace TestApp
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(93, 59);
+            this.label2.Location = new System.Drawing.Point(93, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(235, 30);
             this.label2.TabIndex = 7;
@@ -121,7 +121,7 @@ namespace TestApp
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(93, 102);
+            this.label3.Location = new System.Drawing.Point(93, 97);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(277, 30);
             this.label3.TabIndex = 8;
@@ -129,7 +129,7 @@ namespace TestApp
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(93, 145);
+            this.label4.Location = new System.Drawing.Point(93, 183);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(335, 42);
             this.label4.TabIndex = 9;
@@ -138,7 +138,7 @@ namespace TestApp
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(93, 200);
+            this.label5.Location = new System.Drawing.Point(93, 140);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(277, 30);
             this.label5.TabIndex = 10;
@@ -146,7 +146,7 @@ namespace TestApp
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(93, 242);
+            this.label6.Location = new System.Drawing.Point(93, 237);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(335, 42);
             this.label6.TabIndex = 11;

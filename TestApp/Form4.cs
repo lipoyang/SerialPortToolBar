@@ -14,10 +14,10 @@ using SerialPortToolBar;
 
 namespace TestApp
 {
-    // テスト3
-    public partial class Form3 : Form
+    // テスト4
+    public partial class Form4 : Form
     {
-        public Form3()
+        public Form4()
         {
             InitializeComponent();
         }
@@ -26,6 +26,8 @@ namespace TestApp
         SerialPort serialPort;
         // シリアルパケット受信器
         SerialPacketReceiver receiver;
+        // パケットヘッダ
+        byte[] header = new byte[] { 0xA5, 0x5A };
 
         // 開始処理
         private void Form_Load(object sender, EventArgs e)
@@ -38,10 +40,15 @@ namespace TestApp
             // シリアルパケット受信器の設定
             receiver = new SerialPacketReceiver(serialPort);
             receiver.PacketReceived += Receiver_PacketReceived; // パケット受信ハンドラ
-            receiver.PacketMode = PacketMode.Ascii; // アスキーモード
-            receiver.StartCode = AsciiCode.STX; // 開始コード
-            receiver.EndCode   = AsciiCode.ETX; // 終了コード
+            receiver.PacketMode = PacketMode.Binary; // バイナリーモード
+            receiver.Header = header;  // パケットヘッダ
+            receiver.LengthOffset = 2; // パケット長指定子の開始位置
+            receiver.LengthWidth  = 2; // パケット長指定子のバイト幅
+            receiver.LengthExtra  = 4; // パケット長指定に加算する値 (全バイト数算出のため)
+            receiver.LengthEndian = Endian.BigEndian; // パケット長指定子のエンディアン
+            receiver.TimeOut = 500; // タイムアウト時間[ミリ秒]
             receiver.Start(); // パケット受信スレッド開始
+            // TODO
         }
 
         // 終了処理
@@ -74,13 +81,13 @@ namespace TestApp
         private void sendPacket(int val)
         {
             // パケット作成
-            string hex = val.ToString("X2");
-            byte[] hexbyte = Encoding.ASCII.GetBytes(hex);
-            byte[] packet = new byte[4];
-            packet[0] = AsciiCode.STX;
-            packet[1] = hexbyte[0];
-            packet[2] = hexbyte[1];
-            packet[3] = AsciiCode.ETX;
+            byte[] packet = new byte[6];
+            Array.Copy(header, packet, 2);
+            packet[2] = 0x00; // Length 上位バイト
+            packet[3] = 0x02; // Length 下位バイト
+            packet[4] = (byte)val;    // データ
+            packet[5] = (byte)(~val); // データ反転
+
             // パケット送信
             serialPort.WriteBytes(packet);
         }
@@ -95,17 +102,18 @@ namespace TestApp
                 if (packet == null) break;
 
                 // パケットを解釈
-                string str = Encoding.ASCII.GetString(packet);
-                string sub = str.Substring(1, 2);
-                try {
-                    int val = int.Parse(sub, NumberStyles.HexNumber);
-
+                byte val = packet[4];
+                byte ival = packet[5];
+                if((byte)~val == ival)
+                {
                     // プログレスバーに表示
-                    this.BeginInvoke((Action)(()=> {
+                    this.BeginInvoke((Action)(() => {
                         progressBar.SetValue(val);
                     }));
-                } catch {
-                    ;
+                }
+                else
+                {
+                    Console.WriteLine("Data Verify Error!");
                 }
             }
         }

@@ -26,7 +26,7 @@ namespace TestApp
         bool threadRxQuit;
 
         // 開始処理
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             // フォームのLoadイベントで開始処理を呼ぶ
             serialPortToolStrip.Begin(@"SETTING.INI", this.Text);
@@ -43,7 +43,7 @@ namespace TestApp
         }
 
         // 終了処理
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             // 受信スレッド終了
             threadRxQuit = true;

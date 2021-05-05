@@ -1,7 +1,7 @@
 ﻿
 namespace TestApp
 {
-    partial class Form3
+    partial class Form4
     {
         /// <summary>
         /// Required designer variable.
@@ -82,7 +82,7 @@ namespace TestApp
             this.serialPortToolStrip.Text = "serialPortToolStrip1";
             this.serialPortToolStrip.Opened += new System.EventHandler(this.serialPortToolStrip_Opened);
             // 
-            // Form3
+            // Form4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -92,8 +92,8 @@ namespace TestApp
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.serialPortToolStrip);
-            this.Name = "Form3";
-            this.Text = "テスト3";
+            this.Name = "Form4";
+            this.Text = "テスト4";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
