@@ -127,7 +127,7 @@ namespace SerialPortToolBar
                 // タイムアウト判定
                 DateTime endTime = DateTime.Now;
                 TimeSpan ts = endTime - startTime;
-                int elasped = ts.Milliseconds;
+                int elasped = (int)ts.TotalMilliseconds;
                 if (elasped >= timeout) break;
 
                 Thread.Sleep(PollingInterval);
@@ -245,7 +245,7 @@ namespace SerialPortToolBar
             // タイムアウト判定
             DateTime endTime = DateTime.Now;
             TimeSpan ts = endTime - rxStartTime;
-            int elasped = ts.Milliseconds;
+            int elasped = (int)ts.TotalMilliseconds;
             if (elasped >= this.TimeOut) {
                 rxState = RxState.Ready;
             }

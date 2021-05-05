@@ -51,7 +51,10 @@ namespace TestApp
 
         private void button5_Click(object sender, EventArgs e)
         {
-
+            var formA = new Form5A() { Text = "テスト5 ポートA側" };
+            formA.Show();
+            var formB = new Form5B() { Text = "テスト5 ポートB側" };
+            formB.Show();
         }
 
         private void button6_Click(object sender, EventArgs e)

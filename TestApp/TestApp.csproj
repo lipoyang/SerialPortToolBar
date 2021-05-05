@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form5B.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form5B.Designer.cs">
+      <DependentUpon>Form5B.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form5A.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form5A.Designer.cs">
+      <DependentUpon>Form5A.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form4.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +91,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProgressBarExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form5B.resx">
+      <DependentUpon>Form5B.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form5A.resx">
+      <DependentUpon>Form5A.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
       <DependentUpon>Form4.cs</DependentUpon>
     </EmbeddedResource>
