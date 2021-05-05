@@ -27,7 +27,7 @@ namespace TestApp
         // シリアルパケット受信器
         SerialPacketReceiver receiver;
         // パケットヘッダ
-        byte[] header = new byte[] { 0xA5, 0x5A };
+        readonly byte[] header = new byte[] { 0xA5, 0x5A };
 
         // 開始処理
         private void Form_Load(object sender, EventArgs e)
@@ -38,17 +38,18 @@ namespace TestApp
             // シリアルポート
             serialPort = serialPortToolStrip.Port;
             // シリアルパケット受信器の設定
-            receiver = new SerialPacketReceiver(serialPort);
+            receiver = new SerialPacketReceiver(serialPort)
+            {
+                PacketMode = PacketMode.Binary, // バイナリーモード
+                Header = header,  // パケットヘッダ
+                LengthOffset = 2, // パケット長指定子の開始位置
+                LengthWidth  = 2, // パケット長指定子のバイト幅
+                LengthExtra  = 4, // パケット長指定に加算する値 (全バイト数算出のため)
+                LengthEndian = Endian.BigEndian, // パケット長指定子のエンディアン
+                TimeOut = 500 // タイムアウト時間[ミリ秒]
+            };
             receiver.PacketReceived += Receiver_PacketReceived; // パケット受信ハンドラ
-            receiver.PacketMode = PacketMode.Binary; // バイナリーモード
-            receiver.Header = header;  // パケットヘッダ
-            receiver.LengthOffset = 2; // パケット長指定子の開始位置
-            receiver.LengthWidth  = 2; // パケット長指定子のバイト幅
-            receiver.LengthExtra  = 4; // パケット長指定に加算する値 (全バイト数算出のため)
-            receiver.LengthEndian = Endian.BigEndian; // パケット長指定子のエンディアン
-            receiver.TimeOut = 500; // タイムアウト時間[ミリ秒]
             receiver.Start(); // パケット受信スレッド開始
-            // TODO
         }
 
         // 終了処理

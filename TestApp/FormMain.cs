@@ -19,41 +19,33 @@ namespace TestApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var formA = new Form1();
-            formA.Text = "テスト1 ポートA側";
+            var formA = new Form1() { Text = "テスト1 ポートA側" };
             formA.Show();
-            var formB = new Form1();
-            formB.Text = "テスト1 ポートB側";
+            var formB = new Form1() { Text = "テスト1 ポートB側" };
             formB.Show();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var formA = new Form2();
-            formA.Text = "テスト2 ポートA側";
+            var formA = new Form2() { Text = "テスト2 ポートA側" };
             formA.Show();
-            var formB = new Form2();
-            formB.Text = "テスト2 ポートB側";
+            var formB = new Form2() { Text = "テスト2 ポートB側" };
             formB.Show();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var formA = new Form3();
-            formA.Text = "テスト3 ポートA側";
+            var formA = new Form3() { Text = "テスト3 ポートA側" };
             formA.Show();
-            var formB = new Form3();
-            formB.Text = "テスト3 ポートB側";
+            var formB = new Form3() { Text = "テスト3 ポートB側" };
             formB.Show();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            var formA = new Form4();
-            formA.Text = "テスト4 ポートA側";
+            var formA = new Form4() { Text = "テスト4 ポートA側" };
             formA.Show();
-            var formB = new Form4();
-            formB.Text = "テスト4 ポートB側";
+            var formB = new Form4() { Text = "テスト4 ポートB側" };
             formB.Show();
         }
 

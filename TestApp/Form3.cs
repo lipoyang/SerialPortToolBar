@@ -36,11 +36,13 @@ namespace TestApp
             // シリアルポート
             serialPort = serialPortToolStrip.Port;
             // シリアルパケット受信器の設定
-            receiver = new SerialPacketReceiver(serialPort);
+            receiver = new SerialPacketReceiver(serialPort)
+            {
+                PacketMode = PacketMode.Ascii, // アスキーモード
+                StartCode = AsciiCode.STX, // 開始コード
+                EndCode   = AsciiCode.ETX  // 終了コード
+            };
             receiver.PacketReceived += Receiver_PacketReceived; // パケット受信ハンドラ
-            receiver.PacketMode = PacketMode.Ascii; // アスキーモード
-            receiver.StartCode = AsciiCode.STX; // 開始コード
-            receiver.EndCode   = AsciiCode.ETX; // 終了コード
             receiver.Start(); // パケット受信スレッド開始
         }
 
