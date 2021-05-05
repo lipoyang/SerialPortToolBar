@@ -36,6 +36,12 @@ namespace TestApp
         // 無応答の数
         int recvNoneNum = 0;
 
+        // 対話通信スレッド
+        Thread threadInterComm;
+        bool threadInterCommQuit;
+        // 送信データのキュー
+        readonly Queue<int> sendQueue = new Queue<int>();
+
         // 開始処理
         private void Form_Load(object sender, EventArgs e)
         {
@@ -54,40 +60,76 @@ namespace TestApp
 
             // パケット数カウンタ表示
             updateCounter();
+
+            // 対話通信スレッド開始
+            threadInterCommQuit = false;
+            threadInterComm = new Thread(new ThreadStart(() => {
+                threadInterCommFunc();
+            }));
+            threadInterComm.Start();
         }
 
         // 終了処理
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // 対話通信スレッド開始
+            threadInterCommQuit = true;
+            threadInterComm.Join();
+
             // フォームのFormClosingイベントで終了処理を呼ぶ
             serialPortToolStrip.End();
+        }
+
+        // 対話通信スレッドの関数
+        private void threadInterCommFunc()
+        {
+            while (!threadInterCommQuit)
+            {
+                if(serialPort.IsOpen)
+                {
+                    if(sendQueue.Count > 0)
+                    {
+                        // トラックバーを速く動かすと送信データのキューが詰まるので
+                        // 最後の値だけ取ってキューをクリア
+                        int val = sendQueue.Last();
+                        sendQueue.Clear();
+
+                        // パケット送信/応答待ち
+                        sendPacketWaitResponse(val);
+                    }
+                }
+                else
+                {
+                    Thread.Sleep(100);
+                }
+            }
         }
 
         // シリアルポートが開いたとき
         private void serialPortToolStrip_Opened(object sender, EventArgs e)
         {
             sendPackNum = 0;
-            recvAckNum  = 0;
-            recvNakNum  = 0;
+            recvAckNum = 0;
+            recvNakNum = 0;
             recvNoneNum = 0;
             updateCounter();
 
-            // トラックバーの値をパケットで送信
-            sendPacket(trackBar.Value);
+            // 送信データのキューに入れる
+            sendQueue.Enqueue(trackBar.Value);
         }
 
         // トラックバーの値が変化したとき
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void trackBar_Scroll(object sender, EventArgs e)
         {
             if (serialPort.IsOpen)
             {
-                // トラックバーの値をパケットで送信
-                sendPacket(trackBar.Value);
+                // 送信データのキューに入れる
+                sendQueue.Enqueue(trackBar.Value);
             }
         }
 
-        // パケット送信
-        private void sendPacket(int val)
+        // パケット送信/応答待ち
+        private void sendPacketWaitResponse(int val)
         {
             // パケット作成
             string hex = val.ToString("X2");
@@ -99,35 +141,30 @@ namespace TestApp
             packet[3] = AsciiCode.ETX;
 
             sendPackNum++;
-            textBox1.Text = sendPackNum.ToString();
+            this.BeginInvoke((Action)(() => {
+                textBox1.Text = sendPackNum.ToString();
+            }));
 
-            //serialPort.WriteBytes(packet);
+            // パケット送信
+            serialPort.WriteBytes(packet);
 
-            // パケット送信・応答確認のタスク
-            Task task = Task.Run(() =>
-            {
-                // パケット送信
-                serialPort.WriteBytes(packet);
-
-                // パケット受信
-                byte[] resPacket = receiver.WaitPacket(1000); // TODO
-                // 応答はあったか？
-                if (resPacket != null) {
-                    // ACK応答か？
-                    if (resPacket[1] == AsciiCode.ACK) {
-                        recvAckNum++;
-                    } else {
-                        recvNakNum++;
-                    }
+            // パケット受信
+            byte[] resPacket = receiver.WaitPacket(1000); // TODO
+            // 応答はあったか？
+            if (resPacket != null) {
+                // ACK応答か？
+                if (resPacket[1] == AsciiCode.ACK) {
+                    recvAckNum++;
                 } else {
-                    recvNoneNum++;
+                    recvNakNum++;
                 }
-                // 表示更新
-                this.BeginInvoke((Action)(() => {
-                    updateCounter();
-                }));
-            });
-
+            } else {
+                recvNoneNum++;
+            }
+            // 表示更新
+            this.BeginInvoke((Action)(() => {
+                updateCounter();
+            }));
         }
 
         // パケット数表示更新

@@ -69,7 +69,7 @@ namespace TestApp
             this.trackBar.Size = new System.Drawing.Size(400, 45);
             this.trackBar.TabIndex = 5;
             this.trackBar.TickFrequency = 10;
-            this.trackBar.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBar.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // label3
             // 
