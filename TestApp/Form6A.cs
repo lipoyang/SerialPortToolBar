@@ -41,8 +41,9 @@ namespace TestApp
         // 対話通信スレッド
         Thread threadInterComm;
         bool threadInterCommQuit;
-        // 送信データのキュー
+        // 送信データ(トラックバーの値)のキューとシグナル
         readonly Queue<int> sendQueue = new Queue<int>();
+        readonly AutoResetEvent sendSignal = new AutoResetEvent(false);
 
         // 開始処理
         private void Form_Load(object sender, EventArgs e)
@@ -78,8 +79,9 @@ namespace TestApp
         // 終了処理
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 対話通信スレッド開始
+            // 対話通信スレッド終了
             threadInterCommQuit = true;
+            sendSignal.Set();
             threadInterComm.Join();
 
             // フォームのFormClosingイベントで終了処理を呼ぶ
@@ -91,23 +93,16 @@ namespace TestApp
         {
             while (!threadInterCommQuit)
             {
-                if(serialPort.IsOpen)
-                {
-                    if(sendQueue.Count > 0)
-                    {
-                        // トラックバーを速く動かすと送信データのキューが詰まるので
-                        // 最後の値だけ取ってキューをクリア
-                        int val = sendQueue.Last();
-                        sendQueue.Clear();
+                // トラックバー変化のシグナル待ち
+                sendSignal.WaitOne();
+                if (threadInterCommQuit) break;
+                // トラックバーを速く動かすと送信データのキューが詰まるので
+                // 最後の値だけ取ってキューをクリア
+                int val = sendQueue.Last();
+                sendQueue.Clear();
 
-                        // パケット送信/応答待ち
-                        sendPacketWaitResponse(val);
-                    }
-                }
-                else
-                {
-                    Thread.Sleep(100);
-                }
+                // パケット送信/応答待ち
+                sendPacketWaitResponse(val);
             }
         }
 
@@ -120,8 +115,9 @@ namespace TestApp
             recvNoneNum = 0;
             updateCounter();
 
-            // 送信データのキューに入れる
+            // 送信データのキューに入れてシグナル
             sendQueue.Enqueue(trackBar.Value);
+            sendSignal.Set();
         }
 
         // トラックバーの値が変化したとき
@@ -129,8 +125,9 @@ namespace TestApp
         {
             if (serialPort.IsOpen)
             {
-                // 送信データのキューに入れる
+                // 送信データのキューに入れてシグナル
                 sendQueue.Enqueue(trackBar.Value);
+                sendSignal.Set();
             }
         }
 
