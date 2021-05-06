@@ -30,8 +30,8 @@ namespace SerialPortToolBar
         public AsciiPacket(int size, byte startCode = AsciiCode.STX, byte endCode = AsciiCode.ETX)
         {
             Data = new byte[size];
-            Data[0] = startCode;
-            Data[1] = endCode;
+            Data[0]        = startCode;
+            Data[size - 1] = endCode;
         }
 
         /// <summary>

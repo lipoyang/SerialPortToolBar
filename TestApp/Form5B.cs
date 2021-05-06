@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports; // SerialPort
-using System.Globalization; // NumberStyles
 using SerialPortToolBar;
 
 namespace TestApp
@@ -78,12 +77,10 @@ namespace TestApp
         private void sendAck()
         {
             // パケット作成
-            byte[] packet = new byte[3];
-            packet[0] = AsciiCode.STX;
-            packet[1] = AsciiCode.ACK;
-            packet[2] = AsciiCode.ETX;
+            var packet = new AsciiPacket(3);
+            packet.SetByte(1, AsciiCode.ACK);
             // パケット送信
-            serialPort.WriteBytes(packet);
+            serialPort.WriteBytes(packet.Data);
 
             sendAckNum++;
         }
@@ -92,12 +89,10 @@ namespace TestApp
         private void sendNak()
         {
             // パケット作成
-            byte[] packet = new byte[3];
-            packet[0] = AsciiCode.STX;
-            packet[1] = AsciiCode.NAK;
-            packet[2] = AsciiCode.ETX;
+            var packet = new AsciiPacket(3);
+            packet.SetByte(1, AsciiCode.NAK);
             // パケット送信
-            serialPort.WriteBytes(packet);
+            serialPort.WriteBytes(packet.Data);
 
             sendNakNum++;
         }
@@ -108,22 +103,18 @@ namespace TestApp
             while (true)
             {
                 // パケットを取得
-                byte[] packet = receiver.GetPacket();
-                if (packet == null) break;
+                byte[] data = receiver.GetPacket();
+                if (data == null) break;
                 recvPackNum++;
 
                 // パケットを解釈
-                string str = Encoding.ASCII.GetString(packet);
-                string sub = str.Substring(1, 2);
-                bool ack = true;
+                var packet = new AsciiPacket(data);
                 int val = 0;
-                try {
-                    val = int.Parse(sub, NumberStyles.HexNumber);
-                    if(val < 0 || val > 100) {
-                        ack = false;
+                bool ack = false;
+                if (packet.GetHex(1, 2, ref val)) {
+                    if(0 <= val && val <= 100) {
+                        ack = true;
                     }
-                } catch {
-                    ack = false;
                 }
                 // ACK応答 or NAK応答
                 if (ack) {
@@ -133,8 +124,7 @@ namespace TestApp
                 }
                 // 表示更新
                 this.BeginInvoke((Action)(() => {
-                    if (ack)
-                    {
+                    if (ack) {
                         progressBar.SetValue(val);
                     }
                     updateCounter();

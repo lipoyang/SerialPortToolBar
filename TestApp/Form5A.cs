@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports; // SerialPort
-using System.Globalization; // NumberStyles
 using SerialPortToolBar;
 
 namespace TestApp
@@ -129,24 +128,21 @@ namespace TestApp
         private void sendPacketWaitResponse(int val)
         {
             // パケット作成
-            string hex = val.ToString("X2");
-            byte[] hexbyte = Encoding.ASCII.GetBytes(hex);
-            byte[] packet = new byte[4];
-            packet[0] = AsciiCode.STX;
-            packet[1] = hexbyte[0];
-            packet[2] = hexbyte[1];
-            packet[3] = AsciiCode.ETX;
+            //var packet = new AsciiPacket(4, AsciiCode.STX, AsciiCode.ETX);
+            var packet = new AsciiPacket(4); // STXとETXは省略可
+            packet.SetHex(1, 2, val);
 
+            // パケット送信
+            serialPort.WriteBytes(packet.Data);
+
+            // 表示更新
             sendPackNum++;
             this.BeginInvoke((Action)(() => {
                 textBox1.Text = sendPackNum.ToString();
             }));
 
-            // パケット送信
-            serialPort.WriteBytes(packet);
-
             // パケット受信
-            byte[] resPacket = receiver.WaitPacket(1000); // TODO
+            byte[] resPacket = receiver.WaitPacket(500);
             // 応答はあったか？
             if (resPacket != null) {
                 // ACK応答か？
