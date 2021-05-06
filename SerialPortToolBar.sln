@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IniFileSharp", "IniFileSharp\IniFileSharp.csproj", "{A5D39EC2-C7F8-46AE-AF2B-EC305E7B3F5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{AA0E4504-9377-4F36-ACD3-CE597469C244}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A5D39EC2-C7F8-46AE-AF2B-EC305E7B3F5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5D39EC2-C7F8-46AE-AF2B-EC305E7B3F5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5D39EC2-C7F8-46AE-AF2B-EC305E7B3F5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA0E4504-9377-4F36-ACD3-CE597469C244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA0E4504-9377-4F36-ACD3-CE597469C244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA0E4504-9377-4F36-ACD3-CE597469C244}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA0E4504-9377-4F36-ACD3-CE597469C244}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
