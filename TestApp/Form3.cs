@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports; // SerialPort
-using System.Globalization; // NumberStyles
 using SerialPortToolBar;
 
 namespace TestApp
@@ -76,15 +75,12 @@ namespace TestApp
         private void sendPacket(int val)
         {
             // パケット作成
-            string hex = val.ToString("X2");
-            byte[] hexbyte = Encoding.ASCII.GetBytes(hex);
-            byte[] packet = new byte[4];
-            packet[0] = AsciiCode.STX;
-            packet[1] = hexbyte[0];
-            packet[2] = hexbyte[1];
-            packet[3] = AsciiCode.ETX;
+            //var packet = new AsciiPacket(4, AsciiCode.STX, AsciiCode.ETX);
+            var packet = new AsciiPacket(4); // STXとETXは省略可
+            packet.SetHex(1, 2, val);
+
             // パケット送信
-            serialPort.WriteBytes(packet);
+            serialPort.WriteBytes(packet.Data);
         }
 
         // パケットを受信したとき
@@ -93,21 +89,18 @@ namespace TestApp
             while (true)
             {
                 // パケットを取得
-                byte[] packet = receiver.GetPacket();
-                if (packet == null) break;
+                byte[] data = receiver.GetPacket();
+                if (data == null) break;
 
                 // パケットを解釈
-                string str = Encoding.ASCII.GetString(packet);
-                string sub = str.Substring(1, 2);
-                try {
-                    int val = int.Parse(sub, NumberStyles.HexNumber);
-
+                var packet = new AsciiPacket(data);
+                int val = 0;
+                if (packet.GetHex(1, 2, ref val))
+                {
                     // プログレスバーに表示
-                    this.BeginInvoke((Action)(()=> {
+                    this.BeginInvoke((Action)(() => {
                         progressBar.SetValue(val);
                     }));
-                } catch {
-                    ;
                 }
             }
         }
