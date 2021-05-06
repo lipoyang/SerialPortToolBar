@@ -63,7 +63,7 @@ namespace TestApp
         }
 
         // トラックバーの値が変化したとき
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void trackBar_Scroll(object sender, EventArgs e)
         {
             if (serialPort.IsOpen)
             {

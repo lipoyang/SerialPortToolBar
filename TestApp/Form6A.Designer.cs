@@ -1,7 +1,7 @@
 ﻿
 namespace TestApp
 {
-    partial class Form3
+    partial class Form6A
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,13 @@ namespace TestApp
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.trackBar = new System.Windows.Forms.TrackBar();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.serialPortToolStrip = new SerialPortToolBar.SerialPortToolStrip();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
@@ -49,11 +55,11 @@ namespace TestApp
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 141);
+            this.label2.Location = new System.Drawing.Point(26, 138);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(220, 12);
+            this.label2.Size = new System.Drawing.Size(75, 12);
             this.label2.TabIndex = 4;
-            this.label2.Text = "ここに受信した値をプログレスバーで表示します";
+            this.label2.Text = "送信パケット数";
             // 
             // trackBar
             // 
@@ -65,12 +71,64 @@ namespace TestApp
             this.trackBar.TickFrequency = 10;
             this.trackBar.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
-            // progressBar
+            // label3
             // 
-            this.progressBar.Location = new System.Drawing.Point(23, 186);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(400, 23);
-            this.progressBar.TabIndex = 6;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(26, 168);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 12);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "正常応答の数";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(26, 196);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(75, 12);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "異常応答の数";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(26, 224);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(63, 12);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "無応答の数";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(118, 135);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(100, 19);
+            this.textBox1.TabIndex = 9;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(118, 165);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(100, 19);
+            this.textBox2.TabIndex = 10;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(118, 193);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(100, 19);
+            this.textBox3.TabIndex = 11;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(118, 221);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
+            this.textBox4.Size = new System.Drawing.Size(100, 19);
+            this.textBox4.TabIndex = 12;
             // 
             // serialPortToolStrip
             // 
@@ -82,18 +140,24 @@ namespace TestApp
             this.serialPortToolStrip.Text = "serialPortToolStrip1";
             this.serialPortToolStrip.Opened += new System.EventHandler(this.serialPortToolStrip_Opened);
             // 
-            // Form3
+            // Form6A
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(452, 248);
-            this.Controls.Add(this.progressBar);
+            this.ClientSize = new System.Drawing.Size(452, 266);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.trackBar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.serialPortToolStrip);
-            this.Name = "Form3";
-            this.Text = "テスト3";
+            this.Name = "Form6A";
+            this.Text = "テスト6";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
@@ -108,6 +172,12 @@ namespace TestApp
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TrackBar trackBar;
-        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
