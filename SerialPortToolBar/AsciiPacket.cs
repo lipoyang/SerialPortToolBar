@@ -45,7 +45,7 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
-        /// 数値を16進文字列に変換して格納する
+        /// 整数値を16進文字列に変換して格納する
         /// </summary>
         /// <param name="offset">位置</param>
         /// <param name="width">桁数</param>
@@ -60,7 +60,7 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
-        /// 数値を10進文字列に変換して格納する
+        /// 非負整数値を10進文字列に変換して格納する
         /// </summary>
         /// <param name="offset">位置</param>
         /// <param name="width">桁数</param>
@@ -75,7 +75,7 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
-        /// 16進文字列を数値に変換して取得する
+        /// 16進文字列を非負整数値に変換して取得する
         /// </summary>
         /// <param name="offset">位置</param>
         /// <param name="width">文字数</param>
@@ -101,7 +101,61 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
-        /// 10進文字列を数値に変換して取得する
+        /// 16進文字列を符号なし整数値に変換して取得する
+        /// </summary>
+        /// <param name="offset">位置</param>
+        /// <param name="width">文字数</param>
+        /// <param name="value">数値を返す</param>
+        /// <returns>成否</returns>
+        public bool GetHexU(int offset, int width, out uint value)
+        {
+            value = 0;
+            for (int i = 0; i < width; i++)
+            {
+                value <<= 4;
+
+                if (Hex2Int(Data[offset + i], out int digitVal))
+                {
+                    value += (uint)digitVal;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 16進文字列を符号つき整数値に変換して取得する
+        /// </summary>
+        /// <param name="offset">位置</param>
+        /// <param name="width">文字数</param>
+        /// <param name="value">数値を返す</param>
+        /// <returns>成否</returns>
+        public bool GetHexS(int offset, int width, out int value)
+        {
+            if(GetHexU(offset, width, out uint uValue))
+            {
+                if((uValue & SIGN[width - 1]) == 0) {
+                    value = (int)uValue;
+                } else {
+                    if(width == 8) {
+                        value = (int)uValue;
+                    } else {
+                        value = (int)uValue - COMP[width - 1];
+                    }
+                }
+                return true;
+            } else {
+                value = 0;
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// 10進文字列を非負整数値に変換して取得する
         /// </summary>
         /// <param name="offset">位置</param>
         /// <param name="width">文字数</param>
@@ -174,6 +228,29 @@ namespace SerialPortToolBar
                 return false;
             }
         }
+
+        // 符号ビットのテーブル
+        readonly uint[] SIGN = {
+            0x8,
+            0x80,
+            0x800,
+            0x8000,
+            0x80000,
+            0x800000,
+            0x8000000,
+            0x80000000
+        };
+
+        // 補数換算用のテーブル
+        readonly int[] COMP = {
+            0x10,
+            0x100,
+            0x1000,
+            0x10000,
+            0x100000,
+            0x1000000,
+            0x10000000,
+        };
 
         #endregion
     }
