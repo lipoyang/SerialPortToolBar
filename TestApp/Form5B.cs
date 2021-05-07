@@ -109,9 +109,8 @@ namespace TestApp
 
                 // パケットを解釈
                 var packet = new AsciiPacket(data);
-                int val = 0;
                 bool ack = false;
-                if (packet.GetHex(1, 2, ref val)) {
+                if (packet.GetHex(1, 2, out int val)) {
                     if(0 <= val && val <= 100) {
                         ack = true;
                     }

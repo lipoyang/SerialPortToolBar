@@ -17,13 +17,12 @@ namespace UnitTest
             string str = packet.ToString();
             Assert.AreEqual("#A50F$", str);
             
-            int val = 0;
-            bool ret = packet.GetHex(1, 4, ref val);
+            bool ret = packet.GetHex(1, 4, out int val);
             Assert.AreEqual(true, ret);
             Assert.AreEqual(0xA50F, val);
 
             packet.Data[3] = (byte)'Z';
-            ret = packet.GetHex(1, 4, ref val);
+            ret = packet.GetHex(1, 4, out _);
             Assert.AreEqual(false, ret);
 
             packet.SetHex(1, 4, -1);
@@ -40,13 +39,12 @@ namespace UnitTest
             string str = packet.ToString();
             Assert.AreEqual("#1234$", str);
 
-            int val = 0;
-            bool ret = packet.GetDec(1, 4, ref val);
+            bool ret = packet.GetDec(1, 4, out int val);
             Assert.AreEqual(true, ret);
             Assert.AreEqual(1234, val);
 
             packet.Data[3] = (byte)'A';
-            ret = packet.GetDec(1, 4, ref val);
+            ret = packet.GetDec(1, 4, out _);
             Assert.AreEqual(false, ret);
         }
 

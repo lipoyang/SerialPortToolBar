@@ -94,8 +94,7 @@ namespace TestApp
 
                 // パケットを解釈
                 var packet = new AsciiPacket(data);
-                int val = 0;
-                if (packet.GetHex(1, 2, ref val))
+                if (packet.GetHex(1, 2, out int val))
                 {
                     // プログレスバーに表示
                     this.BeginInvoke((Action)(() => {

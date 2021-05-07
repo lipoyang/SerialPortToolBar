@@ -55,7 +55,7 @@ namespace SerialPortToolBar
             for(int i= width - 1; i >= 0; i--)
             {
                 Data[offset + i] = HEXCHAR[value & 0x0000000F];
-                value = value >> 4;
+                value >>= 4;
             } 
         }
 
@@ -70,7 +70,7 @@ namespace SerialPortToolBar
             for (int i = width - 1; i >= 0; i--)
             {
                 Data[offset + i] = HEXCHAR[value % 10];
-                value = value / 10;
+                value /= 10;
             }
         }
 
@@ -81,23 +81,22 @@ namespace SerialPortToolBar
         /// <param name="width">文字数</param>
         /// <param name="value">数値を返す</param>
         /// <returns>成否</returns>
-        public bool GetHex(int offset, int width, ref int value)
+        public bool GetHex(int offset, int width, out int value)
         {
-            int tempVal = 0;
+            value = 0;
             for (int i = 0; i < width; i++)
             {
-                tempVal = tempVal << 4;
+                value <<= 4;
 
                 if (Hex2Int(Data[offset + i], out int digitVal))
                 {
-                    tempVal += digitVal;
+                    value += digitVal;
                 }
                 else
                 {
                     return false;
                 }
             }
-            value = tempVal;
             return true;
         }
 
@@ -108,23 +107,22 @@ namespace SerialPortToolBar
         /// <param name="width">文字数</param>
         /// <param name="value">数値を返す</param>
         /// <returns>成否</returns>
-        public bool GetDec(int offset, int width, ref int value)
+        public bool GetDec(int offset, int width, out int value)
         {
-            int tempVal = 0;
+            value = 0;
             for (int i = 0; i < width; i++)
             {
-                tempVal = tempVal * 10;
+                value *= 10;
 
                 if (Dec2Int(Data[offset + i], out int digitVal))
                 {
-                    tempVal += digitVal;
+                    value += digitVal;
                 }
                 else
                 {
                     return false;
                 }
             }
-            value = tempVal;
             return true;
         }
         #endregion
