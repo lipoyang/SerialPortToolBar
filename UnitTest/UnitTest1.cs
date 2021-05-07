@@ -5,6 +5,9 @@ using SerialPortToolBar;
 
 namespace UnitTest
 {
+    /// <summary>
+    /// AsciiPacketのテスト
+    /// </summary>
     [TestClass]
     public class UnitTest1
     {
@@ -127,7 +130,6 @@ namespace UnitTest
             ret = packet.GetHexS(4, 4, out sval);
             Assert.AreEqual(true, ret);
             Assert.AreEqual(32767, sval);
-
         }
     }
 }

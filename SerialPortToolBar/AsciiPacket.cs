@@ -15,7 +15,7 @@ namespace SerialPortToolBar
         /// <summary>
         /// コンストラクタ(受信時用)
         /// </summary>
-        /// <param name="data">パケットのバイト配列データ(開始コード/終了コード等も含む)</param>
+        /// <param name="data">パケットのバイト配列データ(開始コード/終了コードも含む)</param>
         public AsciiPacket(byte[] data) : base(data) { }
 
         /// <summary>
