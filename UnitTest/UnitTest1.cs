@@ -63,5 +63,20 @@ namespace UnitTest
             char c = packet.GetChar(3);
             Assert.AreEqual('C', c);
         }
+
+        [TestMethod]
+        public void TestMethod4()
+        {
+            // SetString / GetString
+            byte[] data = Encoding.ASCII.GetBytes("ABCDEFGHIJKLMN");
+            var packet = new AsciiPacket(data);
+            packet.SetString(4, "efghij");
+            string str = packet.ToString();
+            Assert.AreEqual("ABCDefghijKLMN", str);
+
+            str = packet.GetString(2, 4);
+            Assert.AreEqual("CDef", str);
+        }
+
     }
 }

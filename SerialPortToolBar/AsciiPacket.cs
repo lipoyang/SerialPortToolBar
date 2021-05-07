@@ -8,18 +8,15 @@ namespace SerialPortToolBar
     /// <summary>
     /// アスキー形式のパケット
     /// </summary>
-    public class AsciiPacket
+    public class AsciiPacket : BasePacket
     {
-        #region 公開フィールド
+        #region 公開メソッド
 
         /// <summary>
-        /// パケットのバイト配列データ(開始コード/終了コードを含む)
+        /// コンストラクタ(受信時用)
         /// </summary>
-        public byte[] Data;
-
-        #endregion
-
-        #region 公開メソッド
+        /// <param name="data">パケットのバイト配列データ(開始コード/終了コード等も含む)</param>
+        public AsciiPacket(byte[] data) : base(data) { }
 
         /// <summary>
         /// コンストラクタ(送信時用)
@@ -45,44 +42,6 @@ namespace SerialPortToolBar
             Data = new byte[size];
             Data[0]        = (byte)startChar;
             Data[size - 1] = (byte)endChar;
-        }
-
-        /// <summary>
-        /// コンストラクタ(受信時用)
-        /// </summary>
-        /// <param name="data">パケットのバイト配列データ(開始コード/終了コードを含む)</param>
-        public AsciiPacket(byte[] data)
-        {
-            Data = data;
-        }
-
-        /// <summary>
-        /// パケットデータを文字列に変換する
-        /// </summary>
-        /// <returns>文字列</returns>
-        public override string ToString()
-        {
-            return Encoding.ASCII.GetString(Data);
-        }
-
-        /// <summary>
-        /// 1バイトのデータ(制御コードなど)を格納する
-        /// </summary>
-        /// <param name="offset">位置</param>
-        /// <param name="value">1バイトのデータ</param>
-        public void SetByte(int offset, byte value )
-        {
-            Data[offset] = value;
-        }
-
-        /// <summary>
-        /// 1文字のアスキー文字を格納する
-        /// </summary>
-        /// <param name="offset">位置</param>
-        /// <param name="value">1文字のデータ</param>
-        public void SetChar(int offset, char value)
-        {
-            Data[offset] = (byte)value;
         }
 
         /// <summary>
@@ -113,26 +72,6 @@ namespace SerialPortToolBar
                 Data[offset + i] = HEXCHAR[value % 10];
                 value = value / 10;
             }
-        }
-
-        /// <summary>
-        /// 1バイトのデータ(制御コードなど)を取得する
-        /// </summary>
-        /// <param name="offset">位置</param>
-        /// <returns>1バイトのデータ</returns>
-        public byte GetByte(int offset)
-        {
-            return Data[offset];
-        }
-
-        /// <summary>
-        /// 1文字のアスキー文字を取得する
-        /// </summary>
-        /// <param name="offset">位置</param>
-        /// <returns>1文字のデータ</returns>
-        public char GetChar(int offset)
-        {
-            return (char)Data[offset];
         }
 
         /// <summary>
