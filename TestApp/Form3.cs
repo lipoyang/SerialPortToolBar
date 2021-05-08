@@ -75,12 +75,11 @@ namespace TestApp
         private void sendPacket(int val)
         {
             // パケット作成
-            //var packet = new AsciiPacket(4, AsciiCode.STX, AsciiCode.ETX);
-            var packet = new AsciiPacket(4); // STXとETXは省略可
+            var packet = new AsciiPacket(4);
             packet.SetHex(1, 2, val);
 
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
         }
 
         // パケットを受信したとき
@@ -89,11 +88,10 @@ namespace TestApp
             while (true)
             {
                 // パケットを取得
-                byte[] data = receiver.GetPacket();
-                if (data == null) break;
+                var packet = receiver.GetAsciiPacket();
+                if (packet == null) break;
 
                 // パケットを解釈
-                var packet = new AsciiPacket(data);
                 if (packet.GetHex(1, 2, out int val))
                 {
                     // プログレスバーに表示

@@ -60,7 +60,7 @@ namespace TestApp
                 LengthOffset = 2, // パケット長指定子の開始位置
                 LengthWidth  = 2, // パケット長指定子のバイト幅
                 LengthExtra  = 4, // パケット長指定に加算する値 (全バイト数算出のため)
-                LengthEndian = Endian.BigEndian, // パケット長指定子のエンディアン
+                Endian = Endian.Big, // パケット長指定子のエンディアン
                 TimeOut = 500 // タイムアウト時間[ミリ秒]
             };
 
@@ -138,7 +138,7 @@ namespace TestApp
             packet.SetInt(2, 2, 2);   // Length
             packet.SetInt(4, 2, val); // データ
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
 
             // 表示更新
             sendPackNum++;
@@ -147,11 +147,11 @@ namespace TestApp
             }));
 
             // パケット受信
-            byte[] resPacket = receiver.WaitPacket(500);
+            var resPacket = receiver.WaitBinaryPacket(500);
             // 応答はあったか？
             if (resPacket != null) {
                 // ACK応答か？
-                if(resPacket[4] == AsciiCode.ACK) {
+                if(resPacket.Data[4] == AsciiCode.ACK) {
                     recvAckNum++;
                 } else {
                     recvNakNum++;

@@ -80,7 +80,7 @@ namespace TestApp
             var packet = new AsciiPacket(3);
             packet.SetByte(1, AsciiCode.ACK);
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
 
             sendAckNum++;
         }
@@ -92,7 +92,7 @@ namespace TestApp
             var packet = new AsciiPacket(3);
             packet.SetByte(1, AsciiCode.NAK);
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
 
             sendNakNum++;
         }
@@ -103,12 +103,11 @@ namespace TestApp
             while (true)
             {
                 // パケットを取得
-                byte[] data = receiver.GetPacket();
-                if (data == null) break;
+                var packet = receiver.GetAsciiPacket();
+                if (packet == null) break;
                 recvPackNum++;
 
                 // パケットを解釈
-                var packet = new AsciiPacket(data);
                 bool ack = false;
                 if (packet.GetHex(1, 2, out int val)) {
                     if(val <= 100) {

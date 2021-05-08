@@ -89,5 +89,14 @@ namespace SerialPortToolBar
                 return buff2;
             }
         }
+
+        /// <summary>
+        /// パケットを送信します。
+        /// </summary>
+        /// <param name="packet">パケット</param>
+        public static void Send(this SerialPort serialPort, BasePacket packet)
+        {
+            serialPort.Write(packet.Data, 0, packet.Data.Length);
+        }
     }
 }

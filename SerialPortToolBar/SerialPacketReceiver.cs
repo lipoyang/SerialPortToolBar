@@ -26,14 +26,14 @@ namespace SerialPortToolBar
         #region 公開フィールド (通信開始後は変更しないこと)
 
         /// <summary>
-        /// 受信ポーリング周期[ミリ秒]
-        /// </summary>
-        public int PollingInterval = 20;
-
-        /// <summary>
         /// パケットモード。バイナリー形式かアスキー形式か。
         /// </summary>
         public PacketMode PacketMode = PacketMode.Ascii;
+
+        /// <summary>
+        /// 受信ポーリング周期[ミリ秒]
+        /// </summary>
+        public int PollingInterval = 20;
 
         /// <summary>
         /// パケットタイムアウト時間[ミリ秒]。
@@ -55,6 +55,10 @@ namespace SerialPortToolBar
         /// </summary>
         public byte[] Header = null;
 
+        /// <summary>
+        /// バイナリーモードののエンディアン
+        /// </summary>
+        public Endian Endian = Endian.Big;
         /// <summary> 
         /// バイナリーモードのパケット長指定子(Length)の先頭位置 (パケット先頭を0とする)
         /// </summary>
@@ -63,10 +67,6 @@ namespace SerialPortToolBar
         /// バイナリーモードのパケット長指定子(Length)のバイト幅 (1または2)
         /// </summary>
         public int LengthWidth = 1;
-        /// <summary>
-        /// バイナリーモードのパケット長指定子(Length)のエンディアン(バイト幅が2のとき)
-        /// </summary>
-        public Endian LengthEndian = Endian.BigEndian;
         /// <summary>
         /// バイナリーモードのパケット長指定子(Length)の追加値。
         /// (パケットの全バイト数 - Length)の値を指定する。
@@ -136,6 +136,34 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
+        /// アスキー形式パケットの受信を待って取得する (ブロッキング)。タイムアウトした場合はnullを返す。
+        /// </summary>
+        /// <param name="timeout">タイムアウト時間[ミリ秒]</param>
+        /// <returns>受信したパケット</returns>
+        public AsciiPacket WaitAsciiPacket(int timeout)
+        {
+            byte[] data = WaitPacket(timeout);
+            if (data == null) return null;
+
+            var packet = new AsciiPacket(data);
+            return packet;
+        }
+
+        /// <summary>
+        /// バイナリー形式パケットの受信を待って取得する (ブロッキング)。タイムアウトした場合はnullを返す。
+        /// </summary>
+        /// <param name="timeout">タイムアウト時間[ミリ秒]</param>
+        /// <returns>受信したパケット</returns>
+        public BinaryPacket WaitBinaryPacket(int timeout)
+        {
+            byte[] data = WaitPacket(timeout);
+            if (data == null) return null;
+
+            var packet = new BinaryPacket(data, this.Endian);
+            return packet;
+        }
+
+        /// <summary>
         /// 受信したパケットを取得する (ノンブロッキング)。未受信の場合はnullを返す。
         /// </summary>
         /// <remarks>
@@ -156,6 +184,32 @@ namespace SerialPortToolBar
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 受信したアスキー形式パケットを取得する (ノンブロッキング)。未受信の場合はnullを返す。
+        /// </summary>
+        /// <returns>受信したパケット</returns>
+        public AsciiPacket GetAsciiPacket()
+        {
+            byte[] data = GetPacket();
+            if (data == null) return null;
+
+            var packet = new AsciiPacket(data);
+            return packet;
+        }
+
+        /// <summary>
+        /// 受信したバイナリー形式パケットを取得する (ノンブロッキング)。未受信の場合はnullを返す。
+        /// </summary>
+        /// <returns>受信したパケット</returns>
+        public BinaryPacket GetBinaryPacket()
+        {
+            byte[] data = GetPacket();
+            if (data == null) return null;
+
+            var packet = new BinaryPacket(data, this.Endian);
+            return packet;
         }
 
         /// <summary>
@@ -425,7 +479,7 @@ namespace SerialPortToolBar
             // パケット長指定子(Length)が2バイト幅の場合
             else
             {
-                if(LengthEndian == Endian.BigEndian)
+                if(Endian == Endian.Big)
                 {
                     len = ((int)rxBuff[LengthOffset] << 8) |
                           ((int)rxBuff[LengthOffset + 1]);
@@ -468,8 +522,8 @@ namespace SerialPortToolBar
     /// </summary>
     public enum Endian
     {
-        LittleEndian,
-        BigEndian
+        Big,
+        Little
     }
 
     /// <summary>

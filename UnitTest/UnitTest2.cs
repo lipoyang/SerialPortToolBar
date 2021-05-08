@@ -18,7 +18,7 @@ namespace UnitTest
 
             // SetInt
             byte[] header = new byte[] { 0xA5, 0x5A };
-            var packet = new BinaryPacket(6, header, Endian.BigEndian);
+            var packet = new BinaryPacket(6, header, Endian.Big);
             packet.SetInt(2, 2, 0xABCD);
             Assert.AreEqual(0xA5, packet.Data[0]);
             Assert.AreEqual(0x5A, packet.Data[1]);
@@ -36,7 +36,7 @@ namespace UnitTest
             // GetIntU / GetIntS
 
             byte[] data = new byte[] { 0xA5, 0x5A, 0xFF, 0xFF };
-            var packet = new BinaryPacket(data, Endian.BigEndian);
+            var packet = new BinaryPacket(data, Endian.Big);
 
             // GetIntU
             uint uValue = packet.GetIntU(2, 2);
@@ -45,6 +45,26 @@ namespace UnitTest
             // GetIntS
             int sValue = packet.GetIntS(2, 2);
             Assert.AreEqual(-1, sValue);
+        }
+
+        [TestMethod]
+        public void TestMethod3()
+        {
+            // SetFloat / GetFloat
+
+            byte[] header = new byte[] { 0xA5, 0x5A };
+            var packet = new BinaryPacket(6, header, Endian.Big);
+
+            // SetFloat
+            packet.SetFloat(2, 12.59375f);
+            Assert.AreEqual(0x41, packet.Data[2]);
+            Assert.AreEqual(0x49, packet.Data[3]);
+            Assert.AreEqual(0x80, packet.Data[4]);
+            Assert.AreEqual(0x00, packet.Data[5]);
+
+            // GetFloat
+            float value = packet.GetFloat(2);
+            Assert.AreEqual(12.59375f, value);
         }
     }
 }

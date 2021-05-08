@@ -51,7 +51,7 @@ namespace TestApp
                 LengthOffset = 2, // パケット長指定子の開始位置
                 LengthWidth  = 2, // パケット長指定子のバイト幅
                 LengthExtra  = 4, // パケット長指定に加算する値 (全バイト数算出のため)
-                LengthEndian = Endian.BigEndian, // パケット長指定子のエンディアン
+                Endian = Endian.Big, // パケット長指定子のエンディアン
                 TimeOut = 500 // タイムアウト時間[ミリ秒]
             };
             receiver.PacketReceived += Receiver_PacketReceived; // パケット受信ハンドラ
@@ -87,7 +87,7 @@ namespace TestApp
             packet.SetInt (2, 2, 1); // Length
             packet.SetByte(4, (AsciiCode.ACK));
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
 
             sendAckNum++;
         }
@@ -100,7 +100,7 @@ namespace TestApp
             packet.SetInt (2, 2, 1); // Length
             packet.SetByte(4, (AsciiCode.NAK));
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
 
             sendNakNum++;
         }
@@ -111,12 +111,11 @@ namespace TestApp
             while (true)
             {
                 // パケットを取得
-                byte[] data = receiver.GetPacket();
-                if (data == null) break;
+                var packet = receiver.GetBinaryPacket();
+                if (packet == null) break;
                 recvPackNum++;
 
                 // パケットを解釈
-                var packet = new BinaryPacket(data);
                 int val = packet.GetInt(4, 2);
                 bool ack = (val <= 100) ? true : false;
 

@@ -128,12 +128,11 @@ namespace TestApp
         private void sendPacketWaitResponse(int val)
         {
             // パケット作成
-            //var packet = new AsciiPacket(4, AsciiCode.STX, AsciiCode.ETX);
-            var packet = new AsciiPacket(4); // STXとETXは省略可
+            var packet = new AsciiPacket(4);
             packet.SetHex(1, 2, val);
 
             // パケット送信
-            serialPort.WriteBytes(packet.Data);
+            serialPort.Send(packet);
 
             // 表示更新
             sendPackNum++;
@@ -142,11 +141,11 @@ namespace TestApp
             }));
 
             // パケット受信
-            byte[] resPacket = receiver.WaitPacket(500);
+            var resPacket = receiver.WaitAsciiPacket(500);
             // 応答はあったか？
             if (resPacket != null) {
                 // ACK応答か？
-                if (resPacket[1] == AsciiCode.ACK) {
+                if (resPacket.Data[1] == AsciiCode.ACK) {
                     recvAckNum++;
                 } else {
                     recvNakNum++;
