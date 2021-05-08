@@ -69,10 +69,10 @@ namespace SerialPortToolBar
         /// 文字列を格納する
         /// </summary>
         /// <param name="offset">位置</param>
-        /// <param name="value">文字列データ</param>
-        public void SetString(int offset, string strData)
+        /// <param name="stringData">文字列データ</param>
+        public void SetString(int offset, string stringData)
         {
-            byte[] bData = Encoding.ASCII.GetBytes(strData);
+            byte[] bData = Encoding.ASCII.GetBytes(stringData);
             Array.Copy(bData, 0, this.Data, offset, bData.Length);
         }
 
@@ -97,7 +97,7 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
-        /// 文字列を格納する
+        /// 文字列を取得する
         /// </summary>
         /// <param name="offset">位置</param>
         /// <param name="value">文字列データ</param>

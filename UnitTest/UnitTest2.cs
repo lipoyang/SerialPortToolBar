@@ -65,6 +65,19 @@ namespace UnitTest
             // GetFloat
             float value = packet.GetFloat(2);
             Assert.AreEqual(12.59375f, value);
+
+            packet = new BinaryPacket(6, header, Endian.Little);
+
+            // SetFloat
+            packet.SetFloat(2, 12.59375f);
+            Assert.AreEqual(0x00, packet.Data[2]);
+            Assert.AreEqual(0x80, packet.Data[3]);
+            Assert.AreEqual(0x49, packet.Data[4]);
+            Assert.AreEqual(0x41, packet.Data[5]);
+
+            // GetFloat
+            value = packet.GetFloat(2);
+            Assert.AreEqual(12.59375f, value);
         }
     }
 }

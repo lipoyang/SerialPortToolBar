@@ -145,7 +145,7 @@ namespace SerialPortToolBar
         }
 
         /// <summary>
-        /// 符号なし整数値を取得する
+        /// 符号つき整数値を取得する
         /// </summary>
         /// <param name="offset">位置</param>
         /// <param name="width">バイト数</param>
