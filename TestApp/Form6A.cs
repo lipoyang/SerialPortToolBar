@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports; // SerialPort
-using System.Globalization; // NumberStyles
 using SerialPortToolBar;
 
 namespace TestApp
@@ -135,29 +134,24 @@ namespace TestApp
         private void sendPacketWaitResponse(int val)
         {
             // パケット作成
-            byte[] packet = new byte[6];
-            Array.Copy(header, packet, 2);
-            packet[2] = 0x00; // Length 上位バイト
-            packet[3] = 0x02; // Length 下位バイト
-            packet[4] = (byte)val;    // データ
-            packet[5] = (byte)(~val); // データ反転
+            var packet = new BinaryPacket(6, header);
+            packet.SetInt(2, 2, 2);   // Length
+            packet.SetInt(4, 2, val); // データ
+            // パケット送信
+            serialPort.WriteBytes(packet.Data);
 
+            // 表示更新
             sendPackNum++;
             this.BeginInvoke((Action)(() => {
                 textBox1.Text = sendPackNum.ToString();
             }));
 
-            // パケット送信
-            serialPort.WriteBytes(packet);
-
             // パケット受信
-            byte[] resPacket = receiver.WaitPacket(1000); // TODO
+            byte[] resPacket = receiver.WaitPacket(500);
             // 応答はあったか？
             if (resPacket != null) {
                 // ACK応答か？
-                byte res = resPacket[4];
-                byte ires = resPacket[5];
-                if(((byte)~res == ires) && (res == AsciiCode.ACK)) {
+                if(resPacket[4] == AsciiCode.ACK) {
                     recvAckNum++;
                 } else {
                     recvNakNum++;

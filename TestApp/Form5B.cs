@@ -85,7 +85,7 @@ namespace TestApp
             sendAckNum++;
         }
 
-        // ACK送信
+        // NAK送信
         private void sendNak()
         {
             // パケット作成
@@ -111,7 +111,7 @@ namespace TestApp
                 var packet = new AsciiPacket(data);
                 bool ack = false;
                 if (packet.GetHex(1, 2, out int val)) {
-                    if(0 <= val && val <= 100) {
+                    if(val <= 100) {
                         ack = true;
                     }
                 }

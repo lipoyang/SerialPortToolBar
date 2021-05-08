@@ -102,19 +102,17 @@ namespace UnitTest
             byte[] data;
             bool ret;
             AsciiPacket packet;
-            uint uval;
-            int sval;
 
             data = Encoding.ASCII.GetBytes("####FFFF####");
             packet = new AsciiPacket(data);
 
             // GetHexU
-            ret = packet.GetHexU(4, 4, out uval);
+            ret = packet.GetHexU(4, 4, out uint uval);
             Assert.AreEqual(true, ret);
             Assert.AreEqual(65535u, uval);
 
             // GetHexS
-            ret = packet.GetHexS(4, 4, out sval);
+            ret = packet.GetHexS(4, 4, out int sval);
             Assert.AreEqual(true, ret);
             Assert.AreEqual(-1, sval);
 

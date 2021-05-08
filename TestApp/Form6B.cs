@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports; // SerialPort
-using System.Globalization; // NumberStyles
 using SerialPortToolBar;
 
 namespace TestApp
@@ -84,14 +83,11 @@ namespace TestApp
         private void sendAck()
         {
             // パケット作成
-            byte[] packet = new byte[6];
-            Array.Copy(header, packet, 2);
-            packet[2] = 0x00; // Length 上位バイト
-            packet[3] = 0x02; // Length 下位バイト
-            packet[4] = AsciiCode.ACK;
-            packet[5] = (byte)(~packet[4]);
+            var packet = new BinaryPacket(5, header);
+            packet.SetInt (2, 2, 1); // Length
+            packet.SetByte(4, (AsciiCode.ACK));
             // パケット送信
-            serialPort.WriteBytes(packet);
+            serialPort.WriteBytes(packet.Data);
 
             sendAckNum++;
         }
@@ -100,14 +96,11 @@ namespace TestApp
         private void sendNak()
         {
             // パケット作成
-            byte[] packet = new byte[6];
-            Array.Copy(header, packet, 2);
-            packet[2] = 0x00; // Length 上位バイト
-            packet[3] = 0x02; // Length 下位バイト
-            packet[4] = AsciiCode.NAK;
-            packet[5] = (byte)(~packet[4]);
+            var packet = new BinaryPacket(5, header);
+            packet.SetInt (2, 2, 1); // Length
+            packet.SetByte(4, (AsciiCode.NAK));
             // パケット送信
-            serialPort.WriteBytes(packet);
+            serialPort.WriteBytes(packet.Data);
 
             sendNakNum++;
         }
@@ -118,21 +111,15 @@ namespace TestApp
             while (true)
             {
                 // パケットを取得
-                byte[] packet = receiver.GetPacket();
-                if (packet == null) break;
+                byte[] data = receiver.GetPacket();
+                if (data == null) break;
                 recvPackNum++;
 
                 // パケットを解釈
-                bool ack = true;
-                byte val = packet[4];
-                byte ival = packet[5];
-                if((byte)~val == ival){
-                    if(val > 100){
-                        ack = false;
-                    }
-                }else{
-                    ack = false;
-                }
+                var packet = new BinaryPacket(data);
+                int val = packet.GetInt(4, 2);
+                bool ack = (val <= 100) ? true : false;
+
                 // ACK応答 or NAK応答
                 if (ack) {
                     sendAck();
@@ -141,8 +128,7 @@ namespace TestApp
                 }
                 // 表示更新
                 this.BeginInvoke((Action)(() => {
-                    if (ack)
-                    {
+                    if (ack) {
                         progressBar.SetValue(val);
                     }
                     updateCounter();

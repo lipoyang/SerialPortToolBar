@@ -17,7 +17,11 @@ namespace SerialPortToolBar
         /// </summary>
         /// <param name="data">パケットのバイト配列データ(ヘッダ等を含む)</param>
         /// <param name="endian">エンディアン</param>
-        public BinaryPacket(byte[] data, Endian endian = Endian.BigEndian) : base(data) { }
+        public BinaryPacket(byte[] data, Endian endian = Endian.BigEndian)
+        {
+            this.Data = data;
+            this.Endian = endian;
+        }
 
         /// <summary>
         /// コンストラクタ(送信時用)
