@@ -46,6 +46,7 @@
     <Compile Include="BinaryPacket.cs" />
     <Compile Include="AsciiPacket.cs" />
     <Compile Include="BasePacket.cs" />
+    <Compile Include="CRC16.cs" />
     <Compile Include="SerialPacketReceiver.cs" />
     <Compile Include="SerialPortExtensions.cs" />
     <Compile Include="SerialPortToolStrip.cs">

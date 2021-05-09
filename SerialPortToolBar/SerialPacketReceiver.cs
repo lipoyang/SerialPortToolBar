@@ -529,7 +529,7 @@ namespace SerialPortToolBar
     /// <summary>
     /// アスキー制御キャラクタコード
     /// </summary>
-    public class AsciiCode
+    public static class AsciiCode
     {
         public const byte NULL = 0x00;
         public const byte SOH = 0x01;

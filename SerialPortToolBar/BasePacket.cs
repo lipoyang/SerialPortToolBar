@@ -109,6 +109,92 @@ namespace SerialPortToolBar
             return strData;
         }
 
+        /// <summary>
+        /// 算術加算によるチェックサム値を計算する
+        /// </summary>
+        /// <param name="start">開始位置</param>
+        /// <param name="length">バイト数</param>
+        /// <returns>チェックサム値</returns>
+        public byte Sum(int start, int length)
+        {
+            byte sum = 0;
+
+            for(int i = 0; i < length; i++)
+            {
+                sum += this.Data[start + i];
+            }
+            return sum;
+        }
+
+        /// <summary>
+        /// 算術加算によるチェックサム値を計算して指定位置に格納する
+        /// </summary>
+        /// <param name="offset">格納位置</param>
+        /// <param name="start">開始位置</param>
+        /// <param name="length">バイト数</param>
+        public void SetSum(int offset, int start, int length)
+        {
+            byte sum = this.Sum(start, length);
+            this.SetByte(offset, sum);
+        }
+
+        /// <summary>
+        /// 算術加算によるチェックサム値を計算して指定位置の値と比較する
+        /// </summary>
+        /// <param name="offset">格納位置</param>
+        /// <param name="start">開始位置</param>
+        /// <param name="length">バイト数</param>
+        /// <returns>一致すればtrue</returns>
+        public bool CheckSum(int offset, int start, int length)
+        {
+            byte sum = this.Sum(start, length);
+            byte val = this.GetByte(offset);
+            return (sum == val);
+        }
+
+        /// <summary>
+        /// 排他的論理和によるチェックサム値を計算する
+        /// </summary>
+        /// <param name="start">開始位置</param>
+        /// <param name="length">バイト数</param>
+        /// <returns>チェックサム値</returns>
+        public byte Xor(int start, int length)
+        {
+            byte xor = 0;
+
+            for (int i = 0; i < length; i++)
+            {
+                xor ^= this.Data[start + i];
+            }
+            return xor;
+        }
+
+        /// <summary>
+        /// 排他的論理和によるチェックサム値を計算して指定位置に格納する
+        /// </summary>
+        /// <param name="offset">格納位置</param>
+        /// <param name="start">開始位置</param>
+        /// <param name="length">バイト数</param>
+        public void SetXor(int offset, int start, int length)
+        {
+            byte xor = this.Xor(start, length);
+            this.SetByte(offset, xor);
+        }
+
+        /// <summary>
+        /// 排他的論理和によるチェックサム値を計算して指定位置の値と比較する
+        /// </summary>
+        /// <param name="offset">格納位置</param>
+        /// <param name="start">開始位置</param>
+        /// <param name="length">バイト数</param>
+        /// <returns>一致すればtrue</returns>
+        public bool CheckXor(int offset, int start, int length)
+        {
+            byte xor = this.Xor(start, length);
+            byte val = this.GetByte(offset);
+            return (xor == val);
+        }
+
         #endregion
 
     }
