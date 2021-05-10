@@ -67,15 +67,14 @@ namespace UnitTest
             byte[] data = Encoding.ASCII.GetBytes("123456789");
 
             // CRC16-IBM
-            CRC16 crc16IBM = new CRC16(0x0000, CRC16Poly.IBM, 0x0000);
+            CRC16 crc16IBM = new CRC16(0x0000, CRC16Poly.IBM, ShiftDir.Left, 0x0000);
             int val = crc16IBM.Get(data, 0, 9);
             //Assert.AreEqual(0xbb3d, val);
             Assert.AreEqual(0xFEE8, val);
 
             // CRC16-CCITT
-            CRC16 crc16CCITT = new CRC16(0xFFFF, CRC16Poly.CCITT, 0x0000);
+            CRC16 crc16CCITT = new CRC16(0xFFFF, CRC16Poly.CCITT, ShiftDir.Left, 0x0000);
             val = crc16CCITT.Get(data, 0, 9);
-            //Assert.AreEqual(0xbb3d, val);
             Assert.AreEqual(0x29b1, val);
         }
     }

@@ -17,17 +17,22 @@ namespace SerialPortToolBar
         private readonly int Poly;
         // 出力XOR値
         private readonly int Xorout;
+        // シフト方向
+        private readonly ShiftDir Shift;
+
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="init">初期値</param>
         /// <param name="poly">生成多項式値</param>
+        /// <param name="shift">シフト方向</param>
         /// <param name="xorout">出力XOR値</param>
-        public CRC16(int init, int poly, int xorout)
+        public CRC16(int init, int poly, ShiftDir shift = ShiftDir.Left, int xorout = 0x0000)
         {
             this.Init = init;
             this.Poly = poly;
+            this.Shift = shift;
             this.Xorout = xorout;
         }
 
@@ -43,25 +48,50 @@ namespace SerialPortToolBar
             int crc16;
             int i, j;
 
-            crc16 = Init;
-            for (i = 0; i < length; i++)
+            crc16 = Init; // 初期値
+
+            // 左シフト
+            if(Shift == ShiftDir.Left)
             {
-                crc16 ^= data[offset + i] << 8;
-                for (j = 0; j < 8; j++)
+                for (i = 0; i < length; i++)
                 {
-                    if ((crc16 & 0x8000) != 0)
+                    crc16 ^= data[offset + i] << 8;
+                    for (j = 0; j < 8; j++)
                     {
-                        crc16 = (crc16 << 1) ^ Poly;
-                    }
-                    else
-                    {
-                        crc16 <<= 1;
+                        if ((crc16 & 0x8000) != 0)
+                        {
+                            crc16 = (crc16 << 1) ^ Poly; // 生成多項式
+                        }
+                        else
+                        {
+                            crc16 <<= 1;
+                        }
                     }
                 }
             }
-            crc16 ^= Xorout;
+            // 右シフト
+            else
+            {
+                for (i = 0; i < length; i++)
+                {
+                    crc16 ^= data[offset + i];
+
+                    for (j = 0; j < 8; j++)
+                    {
+                        if ((crc16 & 0x0001) != 0)
+                        {
+                            crc16 = (crc16 >> 1) ^ Poly; // 生成多項式
+                        }
+                        else
+                        {
+                            crc16 >>= 1;
+                        }
+                    }
+                }
+            }
+            crc16 ^= Xorout; // 出力XOR
             crc16 &= 0xFFFF;
-            return crc16;
+            return (int)crc16;
         }
     }
 
@@ -72,5 +102,14 @@ namespace SerialPortToolBar
     {
         public const int CCITT = 0x1021;
         public const int IBM   = 0x8005;
+    }
+
+    /// <summary>
+    /// CRC16のシフト演算の方向
+    /// </summary>
+    public enum ShiftDir
+    {
+        Left,
+        Right
     }
 }
