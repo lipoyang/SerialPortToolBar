@@ -14,6 +14,7 @@
 |  [SerialPacketReceiver](README/SerialPacketReceiver.md)  |  シリアル通信のパケット受信器  |
 |  [AsciiPacket](README/AsciiPacket.md)  |  アスキー形式パケット  |
 |  [BinaryPacket](README/BinaryPacket.md)  |  バイナリー形式パケット  |
+|  [CRC16](README/CRC16.md)  |  CRC-16計算機  |
 
 <br>
 

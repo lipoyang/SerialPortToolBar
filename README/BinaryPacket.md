@@ -14,6 +14,8 @@
 | Data |  パケットのバイト配列データ |
 
 ## メソッド
+
+### Set系
 |  名前  |  説明  |
 | ---- | ---- |
 | SetByte(offset, value)  |  1バイトのデータ(制御コードなど)を格納します。 |
@@ -21,10 +23,24 @@
 | SetString(offset, stringData)  |  文字列を格納します。 |
 | SetInt(offset, width, value)  |  整数値を格納します。 |
 | SetFloat(offset, value)  |  float型実数値を格納します。 |
-| byte GetByte(offset)  |  1バイトのデータ(制御コードなど)を取得します。 |
-| char GetChar(offset)  |  1文字のアスキー文字を取得します。 |
-| string GetString(offset, length)  |  文字列を取得します。 |
-| int GetInt(offset, width)  |  非負整数値を取得します。 |
-| uint GetIntU(offset, width)  |  符号なし整数値を取得します。 |
-| int GetIntS(offset, width)  |  符号つき整数値を取得します。 |
-| int GetFloat(offset)  |   float型実数値を取得します。 |
+
+### Get系
+|  名前  |  説明  |
+| ---- | ---- |
+| GetByte(offset)  |  1バイトのデータ(制御コードなど)を取得します。 |
+| GetChar(offset)  |  1文字のアスキー文字を取得します。 |
+| GetString(offset, length)  |  文字列を取得します。 |
+| GetInt(offset, width)  |  非負整数値を取得します。 |
+| GetIntU(offset, width)  |  符号なし整数値を取得します。 |
+| GetIntS(offset, width)  |  符号つき整数値を取得します。 |
+| GetFloat(offset)  |   float型実数値を取得します。 |
+
+### チェックサム系
+|  名前  |  説明  |
+| ---- | ---- |
+| Sum(start, length)  |  算術加算によるチェックサム値を計算します。 |
+| SetSum(offset, start, length)  |  算術加算によるチェックサム値を計算して指定位置に格納します。 |
+| CheckSum(offset, start, length)  |  算術加算によるチェックサム値を計算して指定位置の値と比較します。 |
+| Xor(start, length)  |  排他的論理和によるチェックサム値を計算します。 |
+| SetXor(offset, start, length)  |  排他的論理和によるチェックサム値を計算して指定位置に格納します。 |
+| CheckXor(offset, start, length)  |  排他的論理和によるチェックサム値を計算して指定位置の値と比較します。 |
