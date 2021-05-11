@@ -67,38 +67,45 @@ namespace TestApp
             CRC16 crc16;
             int val;
 
-            crc16 = new CRC16(0x0000, CRC16Poly.IBM, ShiftDir.Left, 0x0000);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
+            int[]  init   = { 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
+            bool[] rshift = { false,  false,  true,   true,   false,  false,  true,   true   };
+            int[]  xorout = { 0x0000, 0xFFFF, 0x0000, 0xFFFF, 0x0000, 0xFFFF, 0x0000, 0xFFFF };
 
-            crc16 = new CRC16(0x0000, CRC16Poly.IBM, ShiftDir.Left, 0xFFFF);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
+            // IBM (x16 + x15 + x2 + 1) : 0x8005 / 0xA001
+            for (int i = 0; i < 8; i++)
+            {
+                int[] expected = { 0xFEE8, 0x0117, 0xBB3D, 0x44C2, 0xAEE7, 0x5118, 0x4B37, 0xB4C8 };
+                
+                int poly       = rshift[i] ? 0xA001 : 0x8005;
+                ShiftDir shift = rshift[i] ? ShiftDir.Right : ShiftDir.Left;
 
-            crc16 = new CRC16(0x0000, 0xA001, ShiftDir.Right, 0x0000);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
+                crc16 = new CRC16(poly, init[i], shift, xorout[i]);
+                val = crc16.Get(data, 0, 9);
+                Console.Write("poly=" + poly.ToString("X04") + " ");
+                Console.Write("init=" + init[i].ToString("X04") + " ");
+                Console.Write("shift=" + (rshift[i] ? "Left  " : "Right "));
+                Console.Write("xorout=" + xorout[i].ToString("X04") + " ");
+                Console.Write("check=" + val.ToString("X04") + " ");
+                Console.WriteLine((val == expected[i]) ? "OK" : "NG");
+            }
 
-            crc16 = new CRC16(0x0000, 0xA001, ShiftDir.Right, 0xFFFF);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
+            // CCITT (x16 + x15 + x2 + 1) : 0x1021 / 0x8408
+            for (int i = 0; i < 8; i++)
+            {
+                int[] expected = { 0x31C3, 0xCE3C, 0x2189, 0xDE76, 0x29B1, 0xD64E, 0x6F91, 0x906E };
 
-            crc16 = new CRC16(0xFFFF, CRC16Poly.IBM, ShiftDir.Left, 0x0000);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
+                int poly       = rshift[i] ? 0x8408 : 0x1021;
+                ShiftDir shift = rshift[i] ? ShiftDir.Right : ShiftDir.Left;
 
-            crc16 = new CRC16(0xFFFF, CRC16Poly.IBM, ShiftDir.Left, 0xFFFF);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
-
-            crc16 = new CRC16(0xFFFF, 0xA001, ShiftDir.Right, 0x0000);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
-
-            crc16 = new CRC16(0xFFFF, 0xA001, ShiftDir.Right, 0xFFFF);
-            val = crc16.Get(data, 0, 9);
-            Console.WriteLine(val.ToString("X04"));
-
+                crc16 = new CRC16(poly, init[i], shift, xorout[i]);
+                val = crc16.Get(data, 0, 9);
+                Console.Write("poly=" + poly.ToString("X04") + " ");
+                Console.Write("init=" + init[i].ToString("X04") + " ");
+                Console.Write("shift=" + (rshift[i] ? "Left  " : "Right "));
+                Console.Write("xorout=" + xorout[i].ToString("X04") + " ");
+                Console.Write("check=" + val.ToString("X04") + " ");
+                Console.WriteLine((val == expected[i]) ? "OK" : "NG");
+            }
         }
     }
 }

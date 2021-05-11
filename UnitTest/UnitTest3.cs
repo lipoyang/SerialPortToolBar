@@ -65,17 +65,41 @@ namespace UnitTest
         public void TestMethod3()
         {
             byte[] data = Encoding.ASCII.GetBytes("123456789");
+            CRC16 crc16;
+            int val;
 
-            // CRC16-IBM
-            CRC16 crc16IBM = new CRC16(0x0000, CRC16Poly.IBM, ShiftDir.Left, 0x0000);
-            int val = crc16IBM.Get(data, 0, 9);
-            //Assert.AreEqual(0xbb3d, val);
-            Assert.AreEqual(0xFEE8, val);
+            int[] init = { 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
+            bool[] rshift = { false, false, true, true, false, false, true, true };
+            int[] xorout = { 0x0000, 0xFFFF, 0x0000, 0xFFFF, 0x0000, 0xFFFF, 0x0000, 0xFFFF };
 
-            // CRC16-CCITT
-            CRC16 crc16CCITT = new CRC16(0xFFFF, CRC16Poly.CCITT, ShiftDir.Left, 0x0000);
-            val = crc16CCITT.Get(data, 0, 9);
-            Assert.AreEqual(0x29b1, val);
+            // IBM (x16 + x15 + x2 + 1) : 0x8005 / 0xA001
+            for (int i = 0; i < 8; i++)
+            {
+                int[] expected = { 0xFEE8, 0x0117, 0xBB3D, 0x44C2, 0xAEE7, 0x5118, 0x4B37, 0xB4C8 };
+
+                int poly = rshift[i] ? 0xA001 : 0x8005;
+                ShiftDir shift = rshift[i] ? ShiftDir.Right : ShiftDir.Left;
+
+                crc16 = new CRC16(poly, init[i], shift, xorout[i]);
+                val = crc16.Get(data, 0, 9);
+
+                Assert.AreEqual(expected[i], val);
+            }
+
+            // CCITT (x16 + x15 + x2 + 1) : 0x1021 / 0x8408
+            for (int i = 0; i < 8; i++)
+            {
+                int[] expected = { 0x31C3, 0xCE3C, 0x2189, 0xDE76, 0x29B1, 0xD64E, 0x6F91, 0x906E };
+
+                int poly = rshift[i] ? 0x8408 : 0x1021;
+                ShiftDir shift = rshift[i] ? ShiftDir.Right : ShiftDir.Left;
+
+                crc16 = new CRC16(poly, init[i], shift, xorout[i]);
+                val = crc16.Get(data, 0, 9);
+
+                Assert.AreEqual(expected[i], val);
+            }
+
         }
     }
 }
