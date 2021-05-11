@@ -100,10 +100,10 @@ namespace SerialPortToolBar
     /// </summary>
     public static class CRC16Poly
     {
-        public const int CCITT_Left  = 0x1021;
-        public const int CCITT_Right = 0x8408;
         public const int IBM_Left    = 0x8005;
         public const int IBM_Right   = 0xA001;
+        public const int CCITT_Left  = 0x1021;
+        public const int CCITT_Right = 0x8408;
     }
 
     /// <summary>

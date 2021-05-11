@@ -83,13 +83,13 @@ namespace TestApp
                 val = crc16.Get(data, 0, 9);
                 Console.Write("poly=" + poly.ToString("X04") + " ");
                 Console.Write("init=" + init[i].ToString("X04") + " ");
-                Console.Write("shift=" + (rshift[i] ? "Left  " : "Right "));
+                Console.Write("shift=" + (rshift[i] ? "Right " : "Left  "));
                 Console.Write("xorout=" + xorout[i].ToString("X04") + " ");
                 Console.Write("check=" + val.ToString("X04") + " ");
                 Console.WriteLine((val == expected[i]) ? "OK" : "NG");
             }
 
-            // CCITT (x16 + x15 + x2 + 1) : 0x1021 / 0x8408
+            // CCITT (x16 + x12 + x5 + 1) : 0x1021 / 0x8408
             for (int i = 0; i < 8; i++)
             {
                 int[] expected = { 0x31C3, 0xCE3C, 0x2189, 0xDE76, 0x29B1, 0xD64E, 0x6F91, 0x906E };
@@ -101,7 +101,7 @@ namespace TestApp
                 val = crc16.Get(data, 0, 9);
                 Console.Write("poly=" + poly.ToString("X04") + " ");
                 Console.Write("init=" + init[i].ToString("X04") + " ");
-                Console.Write("shift=" + (rshift[i] ? "Left  " : "Right "));
+                Console.Write("shift=" + (rshift[i] ? "Right " : "Left  "));
                 Console.Write("xorout=" + xorout[i].ToString("X04") + " ");
                 Console.Write("check=" + val.ToString("X04") + " ");
                 Console.WriteLine((val == expected[i]) ? "OK" : "NG");

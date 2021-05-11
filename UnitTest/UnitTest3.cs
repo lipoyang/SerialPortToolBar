@@ -86,7 +86,7 @@ namespace UnitTest
                 Assert.AreEqual(expected[i], val);
             }
 
-            // CCITT (x16 + x15 + x2 + 1) : 0x1021 / 0x8408
+            // CCITT (x16 + x12 + x5 + 1) : 0x1021 / 0x8408
             for (int i = 0; i < 8; i++)
             {
                 int[] expected = { 0x31C3, 0xCE3C, 0x2189, 0xDE76, 0x29B1, 0xD64E, 0x6F91, 0x906E };
