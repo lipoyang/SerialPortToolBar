@@ -34,6 +34,13 @@ namespace SerialPortToolBar
         public event EventHandler Closed = delegate { };
 
         /// <summary>
+        /// デバイスが切断された時のイベント
+        /// </summary>
+        [Browsable(true)]
+        [Category("拡張機能")]
+        public event EventHandler Disconnected = delegate { };
+
+        /// <summary>
         /// シリアルポートのデータ受信時のイベント
         /// </summary>
         [Browsable(true)]
@@ -103,6 +110,8 @@ namespace SerialPortToolBar
             timerListUpdate.Tick += (sender, e) => {
                 // COMポートリストの更新
                 updateComPortList();
+                // デバイス切断をチェック
+                checkDisconnect();
             };
             timerListUpdate.Start();
         }
@@ -142,6 +151,9 @@ namespace SerialPortToolBar
 
         // COMポートが無い場合の表示
         const string NO_COM_PORT = "ありません";
+
+        // COMポートを開いたか
+        bool isOpen = false;
 
         // COMポートリストのドロップダウン時の処理
         private void listComPort_DropDown(object sender, EventArgs e)
@@ -275,6 +287,20 @@ namespace SerialPortToolBar
             }
         }
 
+        // デバイス切断をチェック
+        private void checkDisconnect()
+        {
+            if (isOpen)
+            {
+                if (!Port.IsOpen)
+                {
+                    isOpen = false;
+                    Disconnected(this, EventArgs.Empty);
+                    buttonDisconnect.PerformClick();
+                }
+            }
+        }
+
         // COMポートを開く
         private bool openComPort(string portName, int baudRate)
         {
@@ -291,6 +317,8 @@ namespace SerialPortToolBar
                 serialPort.Close();
                 return false;
             }
+            isOpen = true;
+
             // イベント発行
             Opened(this, EventArgs.Empty);
 
@@ -305,6 +333,8 @@ namespace SerialPortToolBar
             }catch{
                 ;
             }
+            isOpen = false;
+
             // イベント発行
             Closed(this, EventArgs.Empty);
         }

@@ -54,6 +54,7 @@ namespace TestApp
             this.serialPortToolStrip.Size = new System.Drawing.Size(604, 25);
             this.serialPortToolStrip.TabIndex = 0;
             this.serialPortToolStrip.Text = "serialPortToolStrip1";
+            this.serialPortToolStrip.Disconnected += new System.EventHandler(this.serialPortToolStrip_Disconnected);
             this.serialPortToolStrip.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPortToolStrip_DataReceived);
             // 
             // textBox2

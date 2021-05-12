@@ -67,5 +67,11 @@ namespace TestApp
             textBox1.Text = "";
             textBox2.Text = "";
         }
+
+        // デバイスが切断されたとき
+        private void serialPortToolStrip_Disconnected(object sender, EventArgs e)
+        {
+            MessageBox.Show("デバイスが切断されました", this.Text);
+        }
     }
 }
