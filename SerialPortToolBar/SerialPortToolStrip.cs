@@ -136,6 +136,28 @@ namespace SerialPortToolBar
             iniFile.WriteInteger(iniSection, "BAUD_RATE", defaultBaudRate);
         }
 
+        /// <summary>
+        /// シリアルポートを開く
+        /// </summary>
+        /// <returns>成否</returns>
+        public bool Open()
+        {
+            this.Invoke((Action)(()=> {
+                buttonConnect.PerformClick();
+            }));
+            return Port.IsOpen;
+        }
+
+        /// <summary>
+        /// シリアルポートを閉じる
+        /// </summary>
+        public void Close()
+        {
+            this.Invoke((Action)(() => {
+                buttonDisconnect.PerformClick();
+            }));
+        }
+
         #endregion
 
         #region 内部処理
