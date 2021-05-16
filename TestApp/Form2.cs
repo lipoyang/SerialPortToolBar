@@ -82,6 +82,7 @@ namespace TestApp
         {
             // シリアルポート
             var serialPort = serialPortToolStrip.Port;
+            if (!serialPort.IsOpen) return;
 
             // コマンドラインを送信
             if(textBox1.Text.Length > 0)
@@ -94,7 +95,6 @@ namespace TestApp
         // クリアボタン
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "";
             textBox2.Text = "";
         }
     }
