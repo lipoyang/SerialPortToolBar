@@ -107,26 +107,10 @@ namespace SerialPortToolBar
 
         #endregion
 
-        #region RS-485(半二重通信)用メソッド
+        #region RTS機能設定用メソッド
 
         /// <summary>
-        /// 半二重通信に設定する (必ずポートをOpenしてから設定すること)
-        /// </summary>
-        public static void SetHalfDuplex(this SerialPort serialPort)
-        {
-            serialPort.SetRtsControl(RtsControl.Toggle);
-        }
-
-        /// <summary>
-        /// 半二重通信の設定を解除する (必ずポートをCloseする前に実行すること)
-        /// </summary>
-        public static void ClearHalfDuplex(this SerialPort serialPort)
-        {
-            serialPort.SetRtsControl(RtsControl.Disable);
-        }
-
-        /// <summary>
-        /// DCB構造体のfRtsControl設定する(必ずポートをOpenしてから設定すること)
+        /// DCB構造体のfRtsControlの値を設定する(必ずポートをOpenしてから設定すること)
         /// </summary>
         /// <param name="vallue">fRtsControlの値</param>
         public static void SetRtsControl(this SerialPort serialPort, int vallue)

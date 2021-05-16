@@ -63,7 +63,7 @@ namespace SerialPortToolBar
         /// <summary>
         /// 半二重通信か？(RS-485用)
         /// </summary>
-        public bool HalfDuplex = false;
+        //public bool HalfDuplex = false;
 
         #endregion
 
@@ -130,7 +130,7 @@ namespace SerialPortToolBar
             try{
                 if (serialPort.IsOpen)
                 {
-                    if (HalfDuplex) serialPort.ClearHalfDuplex();
+                    // if (HalfDuplex) serialPort.ClearHalfDuplex();
                     serialPort.Close();
                 }
             } catch {
@@ -342,11 +342,11 @@ namespace SerialPortToolBar
                 serialPort.BaudRate = baudRate;
                 serialPort.Open();
                 serialPort.DiscardInBuffer(); // 受信バッファをフラッシュ
-                if (HalfDuplex) serialPort.SetHalfDuplex();
+                // if (HalfDuplex) serialPort.SetHalfDuplex();
             }
             catch
             {
-                if (HalfDuplex) serialPort.ClearHalfDuplex();
+                // if (HalfDuplex && serialPort.IsOpen) serialPort.ClearHalfDuplex();
                 serialPort.Close();
                 return false;
             }
@@ -362,7 +362,7 @@ namespace SerialPortToolBar
         private void closeComPort()
         {
             try{
-                if (HalfDuplex) serialPort.ClearHalfDuplex();
+                // if (HalfDuplex) serialPort.ClearHalfDuplex();
                 serialPort.Close();
             }catch{
                 ;
