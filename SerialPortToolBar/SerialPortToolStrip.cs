@@ -24,27 +24,31 @@ namespace SerialPortToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Opened = delegate { };
+        [Description("シリアルポートを開いたときに発生します。")]
+        public event EventHandler Opened = null;
 
         /// <summary>
         /// シリアルポートを閉じた時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Closed = delegate { };
+        [Description("シリアルポートを閉じたときに発生します。")]
+        public event EventHandler Closed = null;
 
         /// <summary>
         /// デバイスが切断された時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Disconnected = delegate { };
+        [Description("デバイスが切断されたときに発生します。")]
+        public event EventHandler Disconnected = null;
 
         /// <summary>
         /// シリアルポートのデータ受信時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("シリアルポートがデータを受信したときに発生します。")]
         public event SerialDataReceivedEventHandler DataReceived
         {
             add => serialPort.DataReceived += value;
@@ -197,7 +201,7 @@ namespace SerialPortToolBar
         private void buttonConnect_Click(object sender, EventArgs e)
         {
             // 念のため、いったんCOMポートを閉じる
-            closeComPort();
+            if (serialPort.IsOpen) serialPort.Close();
 
             // COMポート名のチェック
             string portName = listComPort.Text;
@@ -326,7 +330,7 @@ namespace SerialPortToolBar
                 if (!Port.IsOpen)
                 {
                     isOpen = false;
-                    Disconnected(this, EventArgs.Empty);
+                    Disconnected?.Invoke(this, EventArgs.Empty);
                     buttonDisconnect.PerformClick();
                 }
             }
@@ -353,7 +357,7 @@ namespace SerialPortToolBar
             isOpen = true;
 
             // イベント発行
-            Opened(this, EventArgs.Empty);
+            Opened?.Invoke(this, EventArgs.Empty);
 
             return true;
         }
@@ -370,7 +374,7 @@ namespace SerialPortToolBar
             isOpen = false;
 
             // イベント発行
-            Closed(this, EventArgs.Empty);
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         // サイズ変更時の処理

@@ -110,7 +110,7 @@ namespace SerialPortToolBar
             rxState = RxState.Ready;
             
             // 受信パケットのキューをいったん破棄
-            rxPackets.Clear(); 
+            //rxPackets.Clear(); 
             
             // パケット受信かタイムアウトまで
             while (true)
