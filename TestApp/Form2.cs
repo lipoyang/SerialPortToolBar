@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports; // SerialPort
 using SerialPortToolBar;
+using System.Diagnostics; // DebuggerNonUserCode
 
 namespace TestApp
 {
@@ -54,6 +55,7 @@ namespace TestApp
         }
 
         // 受信スレッド関数
+        [DebuggerNonUserCode] // serialPort.ReadLineがタイムアウトのたびに例外メッセージを吐くのを抑止
         private void threadRxFunc()
         {
             // シリアルポート
